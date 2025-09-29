@@ -1,0 +1,41 @@
+name: Minecraft-style GitHub Contribution Graph Generator
+description: Generate Minecraft-style GitHub contribution graph
+author: nrysk
+
+branding:
+  icon: box
+  color: green
+
+permissions:
+  contents: write
+
+input:
+  github_token:
+    description: "GitHub token for authentication"
+    required: true
+    default: "${{ github.token }}"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12"
+
+    - name: Install dependencies
+      run: pip install ${{ github.action_path }}/
+
+    - name: Generate contribution image
+      run: python ${{ github.action_path }}/src/main.py
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+
+    - name: Push image
+      uses: crazy-max/ghaction-github-pages@v4
+      with:
+        target_branch: gh-miner
+        build_dir: output
+        commit_message: "Generate contribution image"
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
