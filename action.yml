@@ -13,7 +13,6 @@ input:
   github_token:
     description: "GitHub token for authentication"
     required: true
-    default: ${{ github.token }}
 
 runs:
   using: "composite"
