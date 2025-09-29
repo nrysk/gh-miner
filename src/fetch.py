@@ -11,7 +11,7 @@ class ContributionData:
     level_matrix: list[list[str]]
 
 
-def fetch_github_contributions(token: str) -> ContributionData:
+def fetch_github_contributions(token: str, login: str) -> ContributionData:
     response = requests.post(
         "https://api.github.com/graphql",
         headers={
@@ -20,8 +20,8 @@ def fetch_github_contributions(token: str) -> ContributionData:
         },
         json={
             "query": """
-                query {
-                    viewer {
+                query($login: String!) {
+                    user(login: $login) {
                         contributionsCollection {
                             contributionCalendar {
                                 totalContributions
@@ -36,7 +36,8 @@ def fetch_github_contributions(token: str) -> ContributionData:
                         }
                     }
                 }
-            """
+            """,
+            "variables": {"login": login},
         },
     )
 
@@ -46,7 +47,7 @@ def fetch_github_contributions(token: str) -> ContributionData:
     calendar = (
         response.json()
         .get("data")
-        .get("viewer")
+        .get("user")
         .get("contributionsCollection")
         .get("contributionCalendar")
     )
@@ -70,6 +71,7 @@ if __name__ == "__main__":
     import os
 
     token = os.getenv("GITHUB_TOKEN")
+    login = os.getenv("GITHUB_LOGIN")
 
     data = fetch_github_contributions(token)
 

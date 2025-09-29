@@ -13,6 +13,9 @@ input:
   github_token:
     description: "GitHub token for authentication"
     required: true
+  github_login:
+    description: "GitHub login name"
+    required: true
 
 runs:
   using: "composite"
@@ -34,6 +37,7 @@ runs:
       run: python ${{ github.action_path }}/src/main.py
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}
+        GITHUB_LOGIN: ${{ inputs.github_login }}
       shell: bash
 
     - name: Push image

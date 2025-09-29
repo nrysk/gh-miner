@@ -34,9 +34,10 @@ FONT = ImageFont.truetype(FONT_FILE, 16)
 
 def main():
     token = os.getenv("GITHUB_TOKEN")
+    login = os.getenv("GITHUB_LOGIN")
     if token is None:
         raise ValueError("GITHUB_TOKEN environment variable is not set")
-    data = fetch_github_contributions(token)
+    data = fetch_github_contributions(token, login)
 
     text_mask = Image.new("RGBA", (BLOCK_SIZE * 55, BLOCK_SIZE * 9), (255, 255, 255, 0))
     draw = ImageDraw.Draw(text_mask)

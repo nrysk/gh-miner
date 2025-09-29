@@ -17,3 +17,4 @@ jobs:
         uses: nrysk/gh-miner@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_login: nrysk
