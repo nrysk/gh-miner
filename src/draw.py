@@ -102,13 +102,13 @@ class Drawer:
                     self.asset_manager.dirt_image, (i * BLOCK_SIZE, j * BLOCK_SIZE)
                 )
 
-        mask = Image.new("L", image.size, 0)
+        mask = Image.new("L", image.size, 128)
         draw = ImageDraw.Draw(mask)
-        for y in range(BLOCK_SIZE):
-            alpha = int(100 * (y / BLOCK_SIZE))
+        for y in range(BLOCK_SIZE - 2):
+            alpha = int(128 * (y / BLOCK_SIZE))
             draw.line([(0, y), (image.width, y)], fill=alpha)
-        draw.rectangle([(0, BLOCK_SIZE), (image.width, image.height)], fill=100)
-        shadow_layer = Image.new("RGBA", image.size, (0, 0, 0, 100))
+
+        shadow_layer = Image.new("RGBA", image.size, (0, 0, 0, 255))
         image.paste(shadow_layer, (0, 0), mask)
 
         return image
