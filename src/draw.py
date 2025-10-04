@@ -1,4 +1,5 @@
 import os
+import random
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
@@ -21,6 +22,12 @@ class AssetManager:
         self.iron_ore_image = self._load_image("iron_ore.png")
         self.gold_ore_image = self._load_image("gold_ore.png")
         self.diamond_ore_image = self._load_image("diamond_ore.png")
+        self.grass_image = self._load_image("grass.png")
+        self.crafting_table_image = self._load_image("crafting_table.png")
+        self.off_furnace_image = self._load_image("off_furnace.png")
+        self.torch_image = self._load_image("torch.png")
+        self.wheat_age_7_image = self._load_image("wheat_age_7.png")
+        self.wheat_age_6_image = self._load_image("wheat_age_6.png")
 
         # images (items)
         self.wooden_pickaxe_image = self._load_image("wooden_pickaxe.png")
@@ -65,13 +72,16 @@ class Drawer:
     def draw(self, data: ContributionData) -> Image.Image:
         background = self.draw_background()
         contribution_grid = self.draw_contribution_grid(data)
-        background.paste(contribution_grid, (BLOCK_SIZE, BLOCK_SIZE), contribution_grid)
+        background.paste(
+            contribution_grid, (BLOCK_SIZE, BLOCK_SIZE * 2), contribution_grid
+        )
+
         text = self.draw_text(f"{data.total_contributions} contributions")
-        background.paste(text, (BLOCK_SIZE * 1, int(BLOCK_SIZE * 0.2)), text)
+        background.paste(text, (int(BLOCK_SIZE * 1.2), int(BLOCK_SIZE * 9.2)), text)
         text = self.draw_textured_text("GH MINER", self.asset_manager.grass_block_image)
         background.paste(
             text,
-            (BLOCK_SIZE * 54 - text.width, int(BLOCK_SIZE * 8.2)),
+            (BLOCK_SIZE * 54 - text.width, int(BLOCK_SIZE * 9.2)),
             text,
         )
 
@@ -107,8 +117,6 @@ class Drawer:
 
         # bedrockを横に6個並べたサイズ
         image = Image.new("RGBA", (BLOCK_SIZE * 6, BLOCK_SIZE), (0, 0, 0, 0))
-        for i in range(6):
-            image.paste(self.asset_manager.bedrock_image, (i * BLOCK_SIZE, 0))
 
         black = Image.new("RGBA", (BLOCK_SIZE, BLOCK_SIZE), (0, 0, 0, 255))
         for i, (threshold, pickaxe_image) in enumerate(pickaxes):
@@ -122,19 +130,59 @@ class Drawer:
         return image
 
     def draw_background(self) -> Image.Image:
-        image = Image.new("RGBA", (BLOCK_SIZE * 55, BLOCK_SIZE * 9), (255, 255, 255, 0))
+        """Arrange images to create a Minecraft-style background."""
+        image = Image.new(
+            "RGBA", (BLOCK_SIZE * 55, BLOCK_SIZE * 10), (255, 255, 255, 0)
+        )
 
         for i in range(55):
-            image.paste(self.asset_manager.grass_block_image, (i * BLOCK_SIZE, 0))
-            for j in range(1, 9):
+            image.paste(
+                self.asset_manager.grass_block_image, (i * BLOCK_SIZE, 1 * BLOCK_SIZE)
+            )
+            for j in range(2, 10):
                 image.paste(
                     self.asset_manager.dirt_image, (i * BLOCK_SIZE, j * BLOCK_SIZE)
                 )
 
+        image.paste(
+            self.asset_manager.crafting_table_image, (5 * BLOCK_SIZE, 0 * BLOCK_SIZE)
+        )
+        image.paste(
+            self.asset_manager.off_furnace_image, (6 * BLOCK_SIZE, 0 * BLOCK_SIZE)
+        )
+        for i in [47, 49, 50]:
+            image.paste(
+                self.asset_manager.grass_image,
+                (i * BLOCK_SIZE, 0 * BLOCK_SIZE),
+                self.asset_manager.grass_image.getchannel("A"),
+            )
+        image.paste(
+            self.asset_manager.torch_image,
+            (3 * BLOCK_SIZE, 0 * BLOCK_SIZE),
+            self.asset_manager.torch_image.getchannel("A"),
+        )
+        for i in [9, 10, 11, 13]:
+            image.paste(
+                self.asset_manager.dirt_image,
+                (i * BLOCK_SIZE, 1 * BLOCK_SIZE),
+                self.asset_manager.dirt_image.getchannel("A"),
+            )
+            image.paste(
+                random.choice(
+                    [
+                        self.asset_manager.wheat_age_7_image,
+                        self.asset_manager.wheat_age_6_image,
+                    ]
+                ),
+                (i * BLOCK_SIZE, int(BLOCK_SIZE / 16)),
+            )
+
         mask = Image.new("L", image.size, 128)
         draw = ImageDraw.Draw(mask)
-        for y in range(BLOCK_SIZE - 2):
-            alpha = int(128 * (y / BLOCK_SIZE))
+        draw.rectangle([(0, 0), (image.width, BLOCK_SIZE)], fill=0)
+
+        for y in range(BLOCK_SIZE, BLOCK_SIZE * 2):
+            alpha = int(128 * (y - BLOCK_SIZE) / BLOCK_SIZE)
             draw.line([(0, y), (image.width, y)], fill=alpha)
 
         shadow_layer = Image.new("RGBA", image.size, (0, 0, 0, 255))

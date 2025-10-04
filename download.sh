@@ -16,7 +16,12 @@ curl -s -L -o $IMAGE_DIR/grass_block.png 'https://static.wikia.nocookie.net/mine
 curl -s -L -o $IMAGE_DIR/snowy_grass_block.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/2/29/Snowy_Grass_Block_%28side_texture%29_JE3_BE3.png/revision/latest?cb=20210327144849'
 curl -s -L -o $IMAGE_DIR/dirt.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/3/3d/Dirt_%28texture%29_JE2_BE2.png/revision/latest?cb=20200919012354'
 curl -s -L -o $IMAGE_DIR/bedrock.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/0/08/Bedrock_%28texture%29_JE2_BE2.png/revision/latest?cb=20201001115713'
-
+curl -s -L -o $IMAGE_DIR/grass.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/5d/Grass_%28item%29.png/revision/latest?cb=20190826122346'
+curl -s -L -o $IMAGE_DIR/crafting_table.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/3/3c/Crafting_Table_%28front_texture%29_JE4.png/revision/latest/scale-to-width-down/48?cb=20201001121026'
+curl -s -L -o $IMAGE_DIR/off_furnace.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/9/9a/Off_Furnace_%28front_texture%29_JE2_BE2.png/revision/latest/scale-to-width-down/48?cb=20210206133200'
+curl -s -L -o $IMAGE_DIR/torch.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c9/Torch_%28texture%29_JE3_BE2.png/revision/latest/scale-to-width-down/48?cb=20191129162608'
+curl -s -L -o $IMAGE_DIR/wheat_age_7.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/8/80/Wheat_Age_7_%28texture%29_JE4_BE2.png/revision/latest/scale-to-width-down/48?cb=20200922002721'
+curl -s -L -o $IMAGE_DIR/wheat_age_6.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/e/e3/Wheat_Age_6_%28texture%29_JE4_BE2.png/revision/latest/scale-to-width-down/48?cb=20200922002717'
 # Download Minecraft pickaxe textures from the Minecraft Wiki (Items)
 curl -s -L -o $IMAGE_DIR/wooden_pickaxe.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/0/0b/Wooden_Pickaxe_JE2_BE2.png/revision/latest?cb=20200217231203'
 curl -s -L -o $IMAGE_DIR/stone_pickaxe.png 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/c4/Stone_Pickaxe_JE2_BE2.png/revision/latest?cb=20200217234007'
