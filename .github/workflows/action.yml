@@ -11,10 +11,19 @@ permissions:
 jobs:
   generate-and-push:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Generate and Push
+      - name: Generate Picture
+        id: generate
         uses: nrysk/gh-miner@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           github_login: nrysk
+
+      - name: Push Picture
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: gh-miner
+          build_dir: ${{ steps.generate.outputs.output_dir }}
+          commit_message: "Generate contribution image"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

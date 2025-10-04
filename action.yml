@@ -18,33 +18,8 @@ input:
     required: true
 
 runs:
-  using: "composite"
-  steps:
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.12"
-
-    - name: Install dependencies
-      run: pip install ${{ github.action_path }}/
-      shell: bash
-
-    - name: Download assets
-      run: bash ${{ github.action_path }}/download.sh
-      shell: bash
-
-    - name: Generate contribution image
-      run: python ${{ github.action_path }}/src/main.py
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
-        GITHUB_LOGIN: ${{ inputs.github_login }}
-      shell: bash
-
-    - name: Push image
-      uses: crazy-max/ghaction-github-pages@v4
-      with:
-        target_branch: gh-miner
-        build_dir: output
-        commit_message: "Generate contribution image"
-      env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - "-a"
+    - "/app/assets"

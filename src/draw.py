@@ -15,6 +15,7 @@ class AssetManager:
         self.grass_block_image = self._load_image("grass_block.png")
         self.dirt_image = self._load_image("dirt.png")
         self.cobblestone_image = self._load_image("cobblestone.png")
+        self.bedrock_image = self._load_image("bedrock.png")
         self.stone_image = self._load_image("stone.png")
         self.coal_ore_image = self._load_image("coal_ore.png")
         self.iron_ore_image = self._load_image("iron_ore.png")
@@ -35,9 +36,13 @@ class AssetManager:
         self.minecraftia_font_16 = self._load_font("Minecraftia-Regular.ttf", 16)
 
     def _load_image(self, filename: str) -> Image.Image:
-        return Image.open(
-            os.path.join(self.asset_dir, "images", filename),
-        ).resize((BLOCK_SIZE, BLOCK_SIZE))
+        return (
+            Image.open(
+                os.path.join(self.asset_dir, "images", filename),
+            )
+            .resize((BLOCK_SIZE, BLOCK_SIZE))
+            .convert("RGBA")
+        )
 
     def _load_font(self, filename: str, size: int) -> ImageFont.FreeTypeFont:
         return ImageFont.truetype(os.path.join(self.asset_dir, "fonts", filename), size)
@@ -60,19 +65,17 @@ class Drawer:
     def draw(self, data: ContributionData) -> Image.Image:
         background = self.draw_background()
         contribution_grid = self.draw_contribution_grid(data)
-        combined = Image.new("RGBA", background.size, (255, 255, 255, 0))
-        combined.paste(background, (0, 0))
-        combined.paste(contribution_grid, (BLOCK_SIZE, BLOCK_SIZE), contribution_grid)
+        background.paste(contribution_grid, (BLOCK_SIZE, BLOCK_SIZE), contribution_grid)
         text = self.draw_text(f"{data.total_contributions} contributions")
-        combined.paste(text, (BLOCK_SIZE * 1, int(BLOCK_SIZE * 0.2)), text)
+        background.paste(text, (BLOCK_SIZE * 1, int(BLOCK_SIZE * 0.2)), text)
         text = self.draw_textured_text("GH MINER", self.asset_manager.grass_block_image)
-        combined.paste(
+        background.paste(
             text,
             (BLOCK_SIZE * 54 - text.width, int(BLOCK_SIZE * 8.2)),
             text,
         )
 
-        return combined
+        return background
 
     def draw_contribution_grid(self, data: ContributionData) -> Image.Image:
         image = Image.new(
@@ -89,6 +92,32 @@ class Drawer:
                     self.asset_manager.get_image_by_level(level),
                     (i_col * BLOCK_SIZE, i_row * BLOCK_SIZE),
                 )
+
+        return image
+
+    def draw_pickaxe_grid(self, data: ContributionData) -> Image.Image:
+        pickaxes = [
+            (1, self.asset_manager.wooden_pickaxe_image),
+            (32, self.asset_manager.stone_pickaxe_image),
+            (256, self.asset_manager.iron_pickaxe_image),
+            (512, self.asset_manager.golden_pickaxe_image),
+            (1024, self.asset_manager.diamond_pickaxe_image),
+            (2048, self.asset_manager.netherite_pickaxe_image),
+        ]
+
+        # bedrockを横に6個並べたサイズ
+        image = Image.new("RGBA", (BLOCK_SIZE * 6, BLOCK_SIZE), (0, 0, 0, 0))
+        for i in range(6):
+            image.paste(self.asset_manager.bedrock_image, (i * BLOCK_SIZE, 0))
+
+        black = Image.new("RGBA", (BLOCK_SIZE, BLOCK_SIZE), (0, 0, 0, 255))
+        for i, (threshold, pickaxe_image) in enumerate(pickaxes):
+            if data.total_contributions >= threshold:
+                image.paste(
+                    pickaxe_image, (i * BLOCK_SIZE, 0), pickaxe_image.getchannel("A")
+                )
+            else:
+                image.paste(black, (i * BLOCK_SIZE, 0), pickaxe_image)
 
         return image
 
