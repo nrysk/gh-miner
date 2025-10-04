@@ -214,3 +214,38 @@ class Drawer:
         image.paste(tiled_texture, (0, 0), text_mask)
 
         return image
+
+
+if __name__ == "__main__":
+    """Generate thumbnail for github readme."""
+    assets = AssetManager("assets")
+
+    image = Image.new("RGBA", (BLOCK_SIZE * 16, BLOCK_SIZE * 9), (255, 255, 255, 0))
+    for i_col in range(16):
+        image.paste(assets.grass_block_image, (i_col * BLOCK_SIZE, 0))
+        for i_row in range(1, 9):
+            image.paste(assets.dirt_image, (i_col * BLOCK_SIZE, i_row * BLOCK_SIZE))
+
+    mask = Image.new("L", image.size, 128)
+    draw = ImageDraw.Draw(mask)
+    for y in range(BLOCK_SIZE):
+        alpha = int(128 * (y) / BLOCK_SIZE)
+        draw.line([(0, y), (image.width, y)], fill=alpha)
+    shadow_layer = Image.new("RGBA", image.size, (0, 0, 0, 255))
+    image.paste(shadow_layer, (0, 0), mask)
+
+    for i_col in range(1, 15):
+        for i_row in range(1, 8):
+            block_image = random.choice(
+                [
+                    assets.stone_image,
+                    assets.coal_ore_image,
+                    assets.iron_ore_image,
+                    assets.gold_ore_image,
+                    assets.diamond_ore_image,
+                ]
+            )
+
+            image.paste(block_image, (i_col * BLOCK_SIZE, i_row * BLOCK_SIZE))
+
+    image.save("img/thumbnail.png")
