@@ -47,6 +47,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+You can see the generated image at `https://github.com/<YOUR_GITHUB_LOGIN>/<YOUR_REPOSITORY>/blob/gh-miner/contributions.png?raw=true`.
+
 ## Contribution
 
 Feel free to open issues and pull requests.

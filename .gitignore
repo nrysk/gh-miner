@@ -8,6 +8,9 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Custom
 .env
 assets/*
 output
+.DS_Store

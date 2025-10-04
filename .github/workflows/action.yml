@@ -1,4 +1,4 @@
-name: Generate Picture and Push to Repository
+name: GH Miner
 
 on:
   push:
